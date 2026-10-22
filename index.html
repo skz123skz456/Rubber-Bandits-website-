@@ -246,10 +246,13 @@ sh+='<div class="tli rv"><div class="yrt"><span>'+s[0]+'</span></div><div class=
 document.getElementById('seasons').innerHTML=sh;
 var io=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.08});
 document.querySelectorAll('.rv').forEach(function(el,i){el.style.transitionDelay=(i%3)*80+'ms';io.observe(el)});
-function route(){var h=location.hash,home=document.getElementById('home'),vm=document.getElementById('v-mentors'),vt=document.getElementById('v-troop');
+function apply(h){var home=document.getElementById('home'),vm=document.getElementById('v-mentors'),vt=document.getElementById('v-troop');
 var v=h=='#/mentors'?vm:h=='#/troop'?vt:null;home.hidden=!!v;vm.hidden=v!==vm;vt.hidden=v!==vt;
-if(v){scrollTo(0,0)}else{var el=h&&document.querySelector(h);if(el)el.scrollIntoView();else if(!h)scrollTo(0,0)}}
-addEventListener('hashchange',route);route();
+if(v){v.querySelectorAll('.rv').forEach(function(e){e.classList.add('in')});window.scrollTo(0,0)}
+else{var el=h&&h.length>1?document.getElementById(h.slice(1)):null;if(el)el.scrollIntoView();else window.scrollTo(0,0)}}
+document.addEventListener('click',function(e){var a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a)return;var h=a.getAttribute('href');e.preventDefault();apply(h);try{history.pushState(null,'',h)}catch(x){}});
+addEventListener('hashchange',function(){apply(location.hash)});addEventListener('popstate',function(){apply(location.hash)});
+apply(location.hash);
 </script>
 </body>
 </html>
